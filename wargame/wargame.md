@@ -19,3 +19,17 @@ get-token
 执行flag04 获得密码
 登录flag04用户获取flag
 ![](img/level04.png)
+
+### level05
+steal-key
+
+ls -a查看隐藏文件,将文件拷贝到home里,解压缩,ssh登录
+![](img/level05.png)
+
+### level06
+crack-password
+
+在passwd中找到flag06密码,用john破解,得到密码ftc,远程登录
+vi /etc/passwd
+john hash001(复制密码到该文件中)
+![](img/level06.png)
