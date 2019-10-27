@@ -54,4 +54,15 @@ backdoor+【del】+【del】+【del】+00R+m8+【del】+ate+【enter】
 ![](img/level08.png)
 
 
+### level09
+
+attack-php
+
+在flag09下查看PHP文件，注意到php正则匹配中有\e模式，preg_replace的第二个参数会被当做代码执行，因此在level09下创建临时文件test，内容为：
+`[email ${${system(getflag09)}}]`
+成功获得flag
+![](img/level09.png)
+
+
+
 
