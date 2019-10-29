@@ -102,5 +102,38 @@ done
 
 
 
+### level20
+
+stack-overflow-change-variable
+
+观察程序，gets参数存在漏洞，通过输入覆盖modified值，通过反汇编可知，modified变量值储存在ebp-0xc，即0xbffff62c中，通过输入覆盖至此，即可获得flag
+输入：
+`./flag20`
+`AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPP1111`
+
+遇到问题:
+在gdb调试过程中修改寄存器或标志位后，程序拒绝访问，因此只能通过输入覆盖
+
+![](img/level20.png)
+
+
+
+### level21
+
+stack-overflow-change-variable-to-the-right-value
+
+观察程序，关键为比较modified和0x56575859，通过输入命令行参数覆盖modified，modified地址为ebp-0xc，即0xbffff60c，覆盖时每四个字节为小头字节序，因此0x56575859换序为YXWV，
+输入（没有换行）：
+`./flag21 AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLLMMMMNNNNOOOOPPPPYXWV`
+
+![](img/level21.png)
+
+
+
+### level22
+
+
+
+
 
 
