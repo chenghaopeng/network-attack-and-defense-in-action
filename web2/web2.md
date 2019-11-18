@@ -9,7 +9,11 @@ Trinity{Now_you_knw_how_to_set_cooki}
 
 ### hw2
 
-不会
+Trinity{Hash_is_strange_in_php}
+
+观察给出的PHP代码，sha1的==有漏洞，寻找sha1哈希后以0e开头的字符串，作为id传入，得到flag
+
+![](img/hw2.png)
 
 ### hw3
 Trinity{serialize_is_ez_if_you_try_locally}
