@@ -124,6 +124,112 @@ done
 登录，获取flag
 ![](img/level10.png)
 
+### level11
+
+exec-vuln
+
+观察`system(buffer)`的中buffer的生成规则，写出加密代码
+
+![](img/level11-1.png)
+
+编译成a.out，设置TEMP环境变量然后运行，得到flag
+
+![](img/level11-2.png)
+
+### level12
+
+attack-lua
+
+`echo password`存在shell执行的漏洞，用nc连接本地50000端口，输入\`getflag12>/tmp/1\`，就能得到flag
+
+![](img/level12.png)
+
+### level13
+
+steal-token-again
+
+用gdb调试flag13，在if的跳转语句前把获取到的uid的寄存器修改为1000，得到token，登录flag13用户得到flag
+
+![](img/level13.png)
+
+![](img/level13-2.png)
+
+### level14
+
+crack-encry-file
+
+编写暴力破解token密文的代码，得到明文，登录flag14得到flag
+
+![](img/level14-1.png)
+
+![](img/level14-2.png)
+
+### level15
+
+dll-hijack
+
+观察`strace ./flag15`发现一直在调用`libc.so.6`这个共享库，就自己写一个这个库，还有一个运行`getflag16`的伪system函数
+
+![](img/level15.png)
+
+编译这两个文件`gcc -shared -fPIC -nostdlib -o /var/tmp/flag15/libc.so.6 ~/1.c ~/1.s`到共享库，运行flag15得到flag
+
+![](img/level15-2.png)
+
+### level16
+
+perl-cgi-vuln
+
+观察代码发现有执行shell脚本的漏洞。需要通过`username`变量来将`getflag16`代入。为了看见命令的执行结果，就把输出重定向到`/tmp/flag`，写成脚本的形式
+
+![](img/level16.png)
+
+在`username`字段中写\`a=/tmp/getflag;${a,,};\`，并将其转义成url格式`%60a%3D%2Ftmp%2Fgetflag%3B%24%7Ba%2C%2C%7D%3B%60`，访问`http://IP:1818/index.cgi?username=%60a%3D%2Ftmp%2Fgetflag%3B%24%7Ba%2C%2C%7D%3B%60&password=1`后，在`/tmp/flag`得到flag
+
+![](img/level16-2.png)
+
+### level17
+
+python-pickle-vuln
+
+在python中定义一个类，并且把`os.system`和`getflag17>/tmp/1`作为参数产生一个对象后进行序列化，并且保存到文件里
+
+![](img/level17.png)
+
+用nc连接本地10008端口，并且把序列化的内容传过去。在`/tmp/1`中就是flag
+
+![](img/level17-2.png)
+
+### level18
+
+level18-vuln
+
+先用1024次的login占满文件描述符，然后用closelog关闭调试文件，再用shell启动bash。我把这一系列的操作写在文件里方便调用。
+
+![](img/level18.png)
+
+然后使用`cat ~/1 | ./flag18 -d /tmp/d`发现能运行bash但是参数错误，就使用`--init-file`参数
+
+![](img/level18-2.png)
+
+![](img/level18-3.png)
+
+发现bash调用成功，并且有一个叫`Starting`的调用，则在/tmp目录下新建这一个脚本，并且添加到环境变量里
+
+![](img/level18-4.png)
+
+再次使用`cat ~/1 | ./flag18 --init-file -d /tmp/d`命令，原来的错误消失了，查看/tmp目录下有flag了
+
+![](img/level18-5.png)
+
+### level19
+
+break-process
+
+写c代码使得程序fork出父子进程，父进程在休眠1秒后退出，子进程休眠2秒后被init接管，通过sh调用`/bin/getflag19`得到flag
+
+![](img/level19.png)
+
 ### level20
 
 stack-overflow-change-variable
